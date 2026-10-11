@@ -1,0 +1,278 @@
+---
+title: "Statistic Deskriptif in R"
+author: "Kelompok 4"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# 1. Deskripsi Data
+
+Analisis ini menggunakan set data berjudul **Commodity Prices and Weather Data in Kota Singkawang**. Data ini berisi catatan bulanan harga komoditas pangan utama dan kondisi cuaca di Kota Singkawang, Kalimantan Barat, dari Januari 2016 sampai Desember 2023 (96 bulan).
+
+Data memiliki 8 kolom:
+
+- **Month:** tanggal awal tiap bulan (penanda waktu, tidak dihitung statistiknya).
+- **Cayenne Price (Rp):** harga cabai rawit per bulan.
+- **Red Chili Price (Rp):** harga cabai merah per bulan.
+- **Shallot Price (Rp):** harga bawang merah per bulan.
+- **Garlic Price (Rp):** harga bawang putih per bulan.
+- **Rainfall (mm):** curah hujan per bulan dalam milimeter.
+- **Number of Rainy Days:** jumlah hari hujan dalam satu bulan.
+- **Inflation:** tingkat inflasi bulanan dalam persen. Nilai negatif berarti deflasi.
+
+Data bersumber dari BPS, lalu dibersihkan, digabungkan, dan dipublikasikan melalui Mendeley Data.
+
+Sumber data: https://data.mendeley.com/datasets/79bmb9vkwk/3
+
+# 2. Tools yang Digunakan
+
+Analisis dilakukan dengan bahasa pemrograman **R** di **RStudio**. Paket yang dipakai adalah `readxl` untuk membaca file Excel dan `tidyverse` untuk melihat struktur data. Laporan disusun dengan R Markdown dan dipublikasikan melalui RPubs.
+
+# 3. Persiapan Data
+
+Langkah pertama: membaca data, lalu mengecek ukuran, nilai kosong, dan ringkasan awal.
+
+```{r}
+library(readxl)
+library(tidyverse)
+
+dataset <- read_excel("dataset.xlsx")
+glimpse(dataset)
+```
+
+```{r}
+dim(dataset)          # jumlah baris dan kolom
+colSums(is.na(dataset))  # jumlah data kosong tiap kolom
+summary(dataset)      # ringkasan cepat semua kolom
+```
+
+Data terdiri dari 96 baris dan 8 kolom, dan tidak ada nilai kosong di kolom mana pun.
+
+# 4. Statistik Deskriptif per Variabel
+
+Untuk tiap variabel kami hitung mean, median, modus, simpangan baku (SD), serta bulan tertinggi dan terendah. Hasil tiap baris kode muncul berurutan: mean, median, modus, SD, SD/Mean (%), bulan tertinggi, bulan terendah. Modus dihitung dengan membagi data menjadi 5 kelas berlebar sama, lalu mengambil kelas yang paling sering muncul. Kolom `SD/Mean` menunjukkan seberapa besar variasi data dibandingkan rata-ratanya.
+
+## 4.1 Cabai Rawit
+
+```{r}
+rawit <- dataset$`Cayenne Price (Rp)`
+
+mean(rawit)
+median(rawit)
+names(which.max(table(cut(rawit, breaks = 5))))   # modus (kelas)
+sd(rawit)
+sd(rawit) / mean(rawit) * 100                  # SD/Mean (%)
+dataset$Month[which.max(rawit)]              # bulan tertinggi
+dataset$Month[which.min(rawit)]              # bulan terendah
+```
+
+## 4.2 Cabai Merah
+
+```{r}
+merah <- dataset$`Red Chili Price (Rp)`
+
+mean(merah)
+median(merah)
+names(which.max(table(cut(merah, breaks = 5))))   # modus (kelas)
+sd(merah)
+sd(merah) / mean(merah) * 100                  # SD/Mean (%)
+dataset$Month[which.max(merah)]              # bulan tertinggi
+dataset$Month[which.min(merah)]              # bulan terendah
+```
+
+## 4.3 Bawang Merah
+
+```{r}
+bawang_merah <- dataset$`Shallot Price (Rp)`
+
+mean(bawang_merah)
+median(bawang_merah)
+names(which.max(table(cut(bawang_merah, breaks = 5))))   # modus (kelas)
+sd(bawang_merah)
+sd(bawang_merah) / mean(bawang_merah) * 100                  # SD/Mean (%)
+dataset$Month[which.max(bawang_merah)]              # bulan tertinggi
+dataset$Month[which.min(bawang_merah)]              # bulan terendah
+```
+
+## 4.4 Bawang Putih
+
+```{r}
+bawang_putih <- dataset$`Garlic Price  (Rp)`
+
+mean(bawang_putih)
+median(bawang_putih)
+names(which.max(table(cut(bawang_putih, breaks = 5))))   # modus (kelas)
+sd(bawang_putih)
+sd(bawang_putih) / mean(bawang_putih) * 100                  # SD/Mean (%)
+dataset$Month[which.max(bawang_putih)]              # bulan tertinggi
+dataset$Month[which.min(bawang_putih)]              # bulan terendah
+```
+
+## 4.5 Curah Hujan
+
+```{r}
+hujan <- dataset$`Rainfall (mm)`
+
+mean(hujan)
+median(hujan)
+names(which.max(table(cut(hujan, breaks = 5))))   # modus (kelas)
+sd(hujan)
+sd(hujan) / mean(hujan) * 100                  # SD/Mean (%)
+dataset$Month[which.max(hujan)]              # bulan tertinggi
+dataset$Month[which.min(hujan)]              # bulan terendah
+```
+
+## 4.6 Hari Hujan
+
+```{r}
+hari_hujan <- dataset$`Number of Rainy Days`
+
+mean(hari_hujan)
+median(hari_hujan)
+names(which.max(table(cut(hari_hujan, breaks = 5))))   # modus (kelas)
+sd(hari_hujan)
+sd(hari_hujan) / mean(hari_hujan) * 100                  # SD/Mean (%)
+dataset$Month[which.max(hari_hujan)]              # bulan tertinggi
+dataset$Month[which.min(hari_hujan)]              # bulan terendah
+```
+
+## 4.7 Inflasi
+
+```{r}
+inflasi <- dataset$Inflation
+
+mean(inflasi)
+median(inflasi)
+names(which.max(table(cut(inflasi, breaks = 5))))   # modus (kelas)
+sd(inflasi)
+sd(inflasi) / mean(inflasi) * 100                  # SD/Mean (%)
+dataset$Month[which.max(inflasi)]              # bulan tertinggi
+dataset$Month[which.min(inflasi)]              # bulan terendah
+```
+
+# 5. Plot
+### Grafik Curah Hujan per Bulan
+```{r}
+library(ggplot2)
+
+ggplot(dataset, aes(x = Month, y = `Rainfall (mm)`)) +
+  geom_line(color = "blue", linewidth = 1) +
+  labs(
+    x = "Tahun",
+    y = "Curah Hujan (mm)"
+  )
+```
+
+### Grafik Harga Cabai Rawit
+```{r}
+library(ggplot2)
+
+ggplot(dataset, aes(x = Month, y = `Cayenne Price (Rp)`)) +
+  geom_line(color = "red", linewidth = 1) +
+  labs(
+    x = "Tahun",
+    y = "Harga (Rp)"
+  )
+```
+
+### Grafik Harga Cabai Merah
+```{r}
+library(ggplot2)
+
+ggplot(dataset, aes(x = Month, y = `Red Chili Price (Rp)`)) +
+  geom_line(color = "darkred", linewidth = 1) +
+  labs(
+    x = "Tahun",
+    y = "Harga (Rp)"
+  )
+```
+
+### Grafik Harga Bawang Merah
+```{r}
+library(ggplot2)
+
+ggplot(dataset, aes(x = Month, y = `Shallot Price (Rp)`)) +
+  geom_line(color = "purple", linewidth = 1) +
+  labs(
+    x = "Tahun",
+    y = "Harga (Rp)"
+  )
+```
+
+### Grafik Harga Bawang Putih
+```{r}
+library(ggplot2)
+
+ggplot(dataset, aes(x = Month, y = `Garlic Price  (Rp)`)) +
+  geom_line(color = "black", linewidth = 1) +
+  labs(
+    x = "Tahun",
+    y = "Harga (Rp)"
+  )
+```
+
+### Grafik Jumlah Hari Hujan
+```{r}
+library(ggplot2)
+
+ggplot(dataset, aes(x = Month, y = `Number of Rainy Days`)) +
+  geom_line(color = "cyan", linewidth = 1) +
+  labs(
+    x = "Tahun",
+    y = "Hari Hujan dalam 1 Bulan"
+  )
+```
+
+### Grafik Inflasi(%)
+```{r}
+library(ggplot2)
+
+ggplot(dataset, aes(x = Month, y = `Inflation`)) +
+  geom_line(color = "green", linewidth = 1) +
+  labs(
+    x = "Tahun",
+    y = "Inflasi (%)"
+  )
+```
+
+# 6. Interpretasi
+
+## 6.1 Perbandingan Harga Antar Komoditas
+
+Cabai rawit dan cabai merah berada pada tingkat harga yang jauh lebih tinggi daripada bawang merah dan bawang putih. Cabai rawit menjadi komoditas termahal dengan rata-rata Rp60.705, sedangkan bawang putih paling murah dengan rata-rata Rp27.823.
+
+## 6.2 Rata-rata, Median, dan Modus
+
+Pada ketujuh variabel, rata-rata sedikit lebih besar daripada median. Artinya ada beberapa bulan ketika nilainya melonjak tinggi dan menarik rata-rata ke atas. Kelas modus pada semua variabel juga memuat nilai mediannya, jadi titik pusat data cukup konsisten. Pada hari hujan, kelas modusnya 7,6 sampai 13,2 hari, sementara rata-ratanya 14,4 hari, yang menunjukkan adanya bulan-bulan dengan hari hujan sangat banyak.
+
+## 6.3 Kestabilan Harga
+
+Dalam rupiah, simpangan baku cabai (Rp12.821 sampai Rp14.301) sekitar dua kali lipat simpangan baku bawang (Rp6.923 sampai Rp7.272). Namun jika dibandingkan dengan harga rata-ratanya, variasi keempat komoditas berdekatan, yaitu 21,6% sampai 26,1%. Jadi harga cabai bergerak lebih lebar dalam rupiah karena tingkat harganya memang lebih tinggi, bukan karena naik turunnya jauh lebih tajam secara relatif. Bawang putih bahkan memiliki variasi relatif tertinggi (26,1%) di antara keempat komoditas.
+
+Lonjakan harga tertinggi tiap komoditas tidak terjadi bersamaan. Cabai rawit memuncak pada Februari 2017, bawang putih pada Mei 2017, cabai merah pada Oktober 2019, dan bawang merah pada Juli 2022.
+
+## 6.4 Faktor Cuaca
+
+Curah hujan bervariasi sangat besar antar bulan. Rata-ratanya 233,8 mm per bulan, tetapi simpangan baku 136,3 mm (sekitar 58% dari rata-rata) menunjukkan perbedaan tajam antara bulan kering dan bulan basah. Curah hujan tertinggi terjadi pada Juli 2020 dan terendah pada Agustus 2016.
+
+Singkawang rata-rata mengalami 14,4 hari hujan per bulan, atau sekitar separuh bulan. Hari hujan terbanyak tercatat pada Juni 2022 dan tersedikit pada Agustus 2019.
+
+## 6.5 Inflasi
+
+Inflasi rata-rata 2,00% dengan kelas modus 0,96% sampai 2,21%, sehingga tergolong rendah. Simpangan baku 1,33 poin persen (sekitar 66% dari rata-rata) menunjukkan laju inflasi bulanan cukup berubah-ubah. Inflasi tertinggi tercatat pada Desember 2022. Pada Maret 2021 inflasi turun ke nilai terendah, yaitu negatif (deflasi).
+
+# 7. Kesimpulan
+
+Berdasarkan data Kota Singkawang periode 2016 sampai 2023, harga cabai lebih tinggi daripada harga bawang, dan secara nominal bergerak lebih lebar. Jika dibandingkan dengan harga rata-ratanya, tingkat fluktuasi cabai dan bawang tidak jauh berbeda. Curah hujan, hari hujan, dan inflasi juga menunjukkan variasi bulanan yang besar.
+
+Rata-rata yang sedikit di atas median pada semua variabel menunjukkan adanya bulan-bulan dengan lonjakan nilai. Karena itu, rata-rata saja tidak cukup untuk menggambarkan kondisi data. Median, modus, dan ukuran sebaran perlu dibaca bersama.
